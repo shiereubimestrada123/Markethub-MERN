@@ -1,5 +1,7 @@
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
 import { Link } from "react-router-dom";
+
+import { RegisterUser } from "../../apicalls/users"
 
 const rules = [
   {
@@ -10,7 +12,16 @@ const rules = [
 
 function Register() {
   const onFinish = async (values) => {
-    console.log(values)
+    try {
+      const response = await RegisterUser(values);
+      if (response.success) {
+        message.success(response.message);
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      message.error(error.message);
+    }
   };
 
   return (
