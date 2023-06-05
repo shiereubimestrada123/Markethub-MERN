@@ -1,6 +1,10 @@
+import { useSelector } from "react-redux";
+
 function Home() {
+  const { user } = useSelector((state) => state.users);
+
   return (
-    <div>Home</div>
+    <div>{user.name}</div>
   )
 }
 

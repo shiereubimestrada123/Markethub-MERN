@@ -1,24 +1,31 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { message } from "antd";
+import { useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { message } from 'antd';
 
-import { GetCurrentUser } from "../apicalls/users";
+import { GetCurrentUser } from '../apicalls/users';
+import { SetLoader } from '../redux/loadersSlice';
+import { SetUser } from '../redux/usersSlice'
 
 function ProtectedPage({ children }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const [user, SetUser] = useState("");
+  const { user } = useSelector((state) => state.users);
 
   const validateToken = async () => {
     try {
+      dispatch(SetLoader(true))
       const response = await GetCurrentUser();
+      dispatch(SetLoader(false))
       if (response.success) {
-        SetUser(response.data);
+        dispatch(SetUser(response.data));
       } else {
         navigate("/login");
         message.error(response.message);
       }
     } catch (error) {
+      dispatch(SetLoader(false))
       navigate("/login");
       message.error(error.message);
     }
