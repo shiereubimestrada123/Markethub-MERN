@@ -1,28 +1,33 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
+import { Provider } from "react-redux";
 import { ConfigProvider } from "antd";
+
+import store from './redux/store'
+import App from './App.jsx'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <ConfigProvider
-      theme={{
-        components: {
-          Button: {
-            colorPrimary: "#40513B",
-            colorPrimaryHover: "#40513B",
-            borderRadius: "2px",
-            boxShadow: "none",
+    <Provider store={store}>
+      <ConfigProvider
+        theme={{
+          components: {
+            Button: {
+              colorPrimary: "#40513B",
+              colorPrimaryHover: "#40513B",
+              borderRadius: "2px",
+              boxShadow: "none",
+            },
           },
-        },
-        token: {
-          borderRadius: "2px",
-          colorPrimary: "#40513B",
-        },
-      }}
-    >
-      <App />
-    </ConfigProvider>
+          token: {
+            borderRadius: "2px",
+            colorPrimary: "#40513B",
+          },
+        }}
+      >
+        <App />
+      </ConfigProvider>
+    </Provider>
   </React.StrictMode>,
 )
