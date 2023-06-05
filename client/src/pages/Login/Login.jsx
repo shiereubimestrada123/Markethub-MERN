@@ -1,5 +1,6 @@
+import { useEffect } from 'react';
 import { Button, Form, Input, message } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { LoginUser } from '../../apicalls/users'
 
@@ -11,13 +12,15 @@ const rules = [
 ];
 
 function Login() {
+  const navigate = useNavigate();
+
   const onFinish = async (values) => {
     try {
-
       const response = await LoginUser(values);
       if (response.success) {
         message.success(response.message);
         localStorage.setItem("token", response.data);
+        navigate("/");
       } else {
         throw new Error(response.message);
       }
@@ -25,6 +28,12 @@ function Login() {
       message.error(error.message);
     }
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div className="h-screen bg-primary flex justify-center items-center">
