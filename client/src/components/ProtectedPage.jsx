@@ -54,11 +54,9 @@ function ProtectedPage({ children }) {
             <span
               className="underline cursor-pointer uppercase"
               onClick={() => {
-                if (user.role === "user") {
+
                   navigate("/profile");
-                } else {
-                  navigate("/admin");
-                }
+                
               }}
             >
               {user.name}
