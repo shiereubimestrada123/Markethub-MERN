@@ -1,38 +1,61 @@
 import { useRef } from 'react';
-import { Modal, Tabs, Form, Input, Row, Col } from 'antd';
-import TextArea from "antd/es/input/TextArea";
+import { useDispatch, useSelector } from "react-redux";
+import { Modal, Tabs, Form, Input, Row, Col, message } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
+
+import { SetLoader } from '../../../redux/loadersSlice';
+import { AddProduct } from '../../../apicalls/products';
 
 const additionalThings = [
   {
-    label: "Bill Available",
-    name: "billAvailable",
+    label: 'Bill Available',
+    name: 'billAvailable',
   },
   {
-    label: "Warranty Available",
-    name: "warrantyAvailable",
+    label: 'Warranty Available',
+    name: 'warrantyAvailable',
   },
   {
-    label: "Accessories Available",
-    name: "accessoriesAvailable",
+    label: 'Accessories Available',
+    name: 'accessoriesAvailable',
   },
   {
-    label: "Box Available",
-    name: "boxAvailable",
+    label: 'Box Available',
+    name: 'boxAvailable',
   },
 ];
 
 const rules = [
   {
     required: true,
-    message: "Required",
+    message: 'Required',
   },
 ];
 
 const ProductsForm = ({ showProductForm, setShowProductForm }) => {
+  const dispatch = useDispatch();
+
   const formRef = useRef(null);
 
+  const { user } = useSelector((state) => state.users);
+
   const onFinish = async (values) => {
-    console.log(values)
+    try {
+      values.seller = user._id;
+      values.status = 'pending'
+      dispatch(SetLoader(true));
+      const response = await AddProduct(values);
+      dispatch(SetLoader(false));
+      if (response.success) {
+        message.success(response.message);
+        setShowProductForm(false);
+      } else {
+        message.error(response.message);
+      }
+    } catch (error) {
+      dispatch(SetLoader(false));
+      message.error(error.message);
+    }
   };
 
   return (
