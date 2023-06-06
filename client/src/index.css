@@ -8,19 +8,21 @@
     box-sizing: border-box;
 }
 
-input {
-	min-height: 45px !important;
-	border: 1px solid #b9b9b9 !important;
-	width: 100%;
+input, select, textarea{
+  min-height: 45px !important;
+  border: 1px solid #b9b9b9 !important;
+  width: 100%;
+	background-color: #fff;
 }
 
-input:focus {
-	outline: none !important;
-	border: 1px solid #6a6a6a !important;
-	box-shadow: none !important;
+input:focus, textarea:focus, select:focus{
+  outline: none !important;
+  border: 1px solid #6a6a6a !important;
+  box-shadow: none !important;
+	background-color: #fff;
 }
 
 button{
-	height: 45px !important;
-	box-shadow: none !important;
+  height: 45px !important;
+  box-shadow: none !important;
 }
