@@ -26,3 +26,8 @@ button{
   height: 45px !important;
   box-shadow: none !important;
 }
+
+table{
+  border: #a1a1a1 1px solid !important;
+  border-radius: 2px;
+}

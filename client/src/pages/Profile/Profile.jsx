@@ -3,20 +3,28 @@ import { Tabs} from 'antd';
 import Products from './Products/Products';
 
 function Profile() {
+  const items = [
+    {
+      key: '1',
+      label: 'Products',
+      children: <Products />,
+    },
+    {
+      key: '2',
+      label: 'Bids',
+      children: 'Bids',
+    },
+    {
+      key: '3',
+      label: 'General',
+      children: 'General',
+    },
+  ];
+
   return (
-    <div>
-        <Tabs defaultActiveKey="1">
-            <Tabs.TabPane tab="Products" key="1">
-                <Products />
-            </Tabs.TabPane>
-            <Tabs.TabPane tab="Bids" key="2">
-                <h1>Bids</h1>
-            </Tabs.TabPane>
-            <Tabs.TabPane tab="General" key="3">
-                <h1>General</h1>
-            </Tabs.TabPane>
-        </Tabs>
-    </div>
+    <>
+      <Tabs defaultActiveKey="1" items={items} />
+    </>
   )
 }
 

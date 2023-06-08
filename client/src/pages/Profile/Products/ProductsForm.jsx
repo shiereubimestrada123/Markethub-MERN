@@ -1,38 +1,14 @@
 import { useRef } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { Modal, Tabs, Form, Input, Row, Col, message } from 'antd';
-import TextArea from 'antd/es/input/TextArea';
+import { Modal, Tabs, message } from 'antd';
 
 import { SetLoader } from '../../../redux/loadersSlice';
-import { AddProduct } from '../../../apicalls/products';
+import { AddProduct, EditProduct } from '../../../apicalls/products';
 
-const additionalThings = [
-  {
-    label: 'Bill Available',
-    name: 'billAvailable',
-  },
-  {
-    label: 'Warranty Available',
-    name: 'warrantyAvailable',
-  },
-  {
-    label: 'Accessories Available',
-    name: 'accessoriesAvailable',
-  },
-  {
-    label: 'Box Available',
-    name: 'boxAvailable',
-  },
-];
+import AddProductForm from './AddProductForm.jsx';
 
-const rules = [
-  {
-    required: true,
-    message: 'Required',
-  },
-];
-
-const ProductsForm = ({ showProductForm, setShowProductForm }) => {
+// eslint-disable-next-line react/prop-types
+const ProductsForm = ({ showProductForm, setShowProductForm, selectedProduct, getData }) => {
   const dispatch = useDispatch();
 
   const formRef = useRef(null);
@@ -41,13 +17,20 @@ const ProductsForm = ({ showProductForm, setShowProductForm }) => {
 
   const onFinish = async (values) => {
     try {
-      values.seller = user._id;
-      values.status = 'pending'
       dispatch(SetLoader(true));
-      const response = await AddProduct(values);
+      let response = null;
+      if (selectedProduct) {
+        // eslint-disable-next-line react/prop-types
+        response = await EditProduct(selectedProduct._id, values);
+      } else {
+        values.seller = user._id;
+        values.status = "pending";
+        response = await AddProduct(values);
+      }
       dispatch(SetLoader(false));
       if (response.success) {
         message.success(response.message);
+        getData();
         setShowProductForm(false);
       } else {
         message.error(response.message);
@@ -57,6 +40,19 @@ const ProductsForm = ({ showProductForm, setShowProductForm }) => {
       message.error(error.message);
     }
   };
+
+  const items = [
+    {
+      key: '1',
+      label: 'General',
+      children: <AddProductForm ref={formRef} onFinish={onFinish} selectedProduct={selectedProduct} />,
+    },
+    {
+      key: '2',
+      label: 'Images',
+      children: 'Images',
+    },
+  ];
 
   return (
     <>
@@ -71,71 +67,10 @@ const ProductsForm = ({ showProductForm, setShowProductForm }) => {
           formRef.current.submit();
         }}
       >
-        <Tabs>
-          <Tabs.TabPane tab="General" key="1">
-            <Form layout="vertical" ref={formRef} onFinish={onFinish}>
-              <Form.Item label="Name" name="name" rules={rules}>
-                <Input type="text" />
-              </Form.Item>
-              <Form.Item label="Description" name="description" rules={rules}>
-                <TextArea type="text" />
-              </Form.Item>
-
-              <Row gutter={[16, 16]}>
-                <Col span={8}>
-                  <Form.Item label="Price" name="price" rules={rules}>
-                    <Input type="number" />
-                  </Form.Item>
-                </Col>
-
-                <Col span={8}>
-                  <Form.Item label="Category" name="category" rules={rules}>
-                    <select>
-                      <option value="">Select</option>
-                      <option value="electronics">Electronics</option>
-                      <option value="fashion">Fashion</option>
-                      <option value="home">Home</option>
-                      <option value="sports">Sports</option>
-                    </select>
-                  </Form.Item>
-                </Col>
-
-                <Col span={8}>
-                  <Form.Item label="Age" name="age" rules={rules}>
-                    <Input type="number" />
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <div className="flex gap-10">
-                {additionalThings.map((item) => {
-                  return (
-                    <Form.Item
-                      key={item.name}
-                      label={item.label}
-                      name={item.name}
-                      valuePropName="checked"
-                    >
-                      <Input
-                        type="checkbox"
-                        value={item.name}
-                        onChange={(e) => {
-                          formRef.current.setFieldsValue({
-                            [item.name]: e.target.checked,
-                          });
-                        }}
-                        checked={formRef.current?.getFieldValue(item.name)}
-                      />
-                    </Form.Item>
-                  );
-                })}
-              </div>
-            </Form>
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="Images" key="2">
-            <h1>images</h1>
-          </Tabs.TabPane>
-        </Tabs>
+        <h1 className="text-primary text-2xl text-center font-semibold uppercase">
+          {selectedProduct ? "Edit Product" : "Add Product"}
+        </h1>
+        <Tabs defaultActiveKey="1" items={items} />
       </Modal>
     </>
   )
