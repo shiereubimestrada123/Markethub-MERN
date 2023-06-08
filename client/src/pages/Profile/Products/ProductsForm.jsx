@@ -1,17 +1,18 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Modal, Tabs, message } from 'antd';
 
 import { SetLoader } from '../../../redux/loadersSlice';
 import { AddProduct, EditProduct } from '../../../apicalls/products';
 
-import AddProductForm from './AddProductForm.jsx';
+import AddProductForm from './AddProductForm';
+import Images from './Images'
 
 // eslint-disable-next-line react/prop-types
 const ProductsForm = ({ showProductForm, setShowProductForm, selectedProduct, getData }) => {
   const dispatch = useDispatch();
-
   const formRef = useRef(null);
+  const [selectedTab = '1', setSelectedTab] = useState('1');
 
   const { user } = useSelector((state) => state.users);
 
@@ -50,7 +51,8 @@ const ProductsForm = ({ showProductForm, setShowProductForm, selectedProduct, ge
     {
       key: '2',
       label: 'Images',
-      children: 'Images',
+      children: <Images selectedProduct={selectedProduct} getData={getData} setShowProductForm={setShowProductForm} />,
+      disabled: !selectedProduct
     },
   ];
 
@@ -66,11 +68,12 @@ const ProductsForm = ({ showProductForm, setShowProductForm, selectedProduct, ge
         onOk={() => {
           formRef.current.submit();
         }}
+        {...(selectedTab === "2" && { footer: false })}
       >
         <h1 className="text-primary text-2xl text-center font-semibold uppercase">
           {selectedProduct ? "Edit Product" : "Add Product"}
         </h1>
-        <Tabs defaultActiveKey="1" items={items} />
+        <Tabs onChange={(key) => setSelectedTab(key)} defaultActiveKey="1" activeKey={selectedTab} items={items} />
       </Modal>
     </>
   )

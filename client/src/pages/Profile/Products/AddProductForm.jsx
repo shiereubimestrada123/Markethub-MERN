@@ -1,5 +1,5 @@
-import { forwardRef, useEffect } from 'react';
-import { Form, Input, Row, Col } from "antd";
+import { forwardRef, useEffect, useState } from 'react';
+import { Form, Input, Row, Col } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 
 const additionalThings = [
@@ -30,11 +30,13 @@ const rules = [
 
 // eslint-disable-next-line react/prop-types
 const AddProductForm = forwardRef(({ onFinish, selectedProduct }, ref) => {
+  
+
   useEffect(() => {
     if (selectedProduct) {
-      ref.current.setFieldsValue(selectedProduct)
+      ref.current.setFieldsValue(selectedProduct);
     }
-  }, [ref, selectedProduct])
+  }, [ref, selectedProduct]);
 
   return (
     <>
@@ -98,7 +100,7 @@ const AddProductForm = forwardRef(({ onFinish, selectedProduct }, ref) => {
       </Form>
     </>
   );
-})
+});
 
 AddProductForm.displayName = 'AddProductForm';
 
