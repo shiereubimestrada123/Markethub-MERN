@@ -1,6 +1,6 @@
 const router = require('express').Router();
-const multer = require("multer");
-const cloudinary = require("../config/cloudinaryConfig");
+const multer = require('multer');
+const cloudinary = require('../config/cloudinaryConfig');
 const Product = require('../models/productModel');
 const authMiddleware = require('../middlewares/authMiddleware');
 
@@ -31,7 +31,9 @@ router.post('/get-products', async (req, res) => {
       filters.seller = seller;
     }
 
-    const products = await Product.find(filters).populate('seller').sort({ createdAt: -1 });
+    const products = await Product.find(filters)
+      .populate('seller')
+      .sort({ createdAt: -1 });
     res.send({
       success: true,
       products,
@@ -84,11 +86,15 @@ const storage = multer.diskStorage({
   },
 });
 
-router.post("/upload-image-to-product", authMiddleware, multer({ storage: storage }).single("file"), async (req, res) => {
+router.post(
+  '/upload-image-to-product',
+  authMiddleware,
+  multer({ storage: storage }).single('file'),
+  async (req, res) => {
     try {
       // upload image to cloudinary
       const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: "Markethub",
+        folder: 'Markethub',
       });
 
       const productId = req.body.productId;
@@ -97,7 +103,7 @@ router.post("/upload-image-to-product", authMiddleware, multer({ storage: storag
       });
       res.send({
         success: true,
-        message: "Image uploaded successfully",
+        message: 'Image uploaded successfully',
         data: result.secure_url,
       });
     } catch (error) {
@@ -108,5 +114,25 @@ router.post("/upload-image-to-product", authMiddleware, multer({ storage: storag
     }
   }
 );
+
+// update product status
+router.put('/update-product-status/:id', authMiddleware, async (req, res) => {
+  try {
+    const { status } = req.body;
+    await Product.findByIdAndUpdate(req.params.id, {
+      status,
+    });
+
+    res.send({
+      success: true,
+      message: 'Product status updated successfully',
+    });
+  } catch (error) {
+    res.send({
+      success: false,
+      message: error.message,
+    });
+  }
+});
 
 module.exports = router;

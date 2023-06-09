@@ -2,7 +2,8 @@ import { message, Table } from 'antd';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import moment from 'moment';
-import { GetProducts } from '../../apicalls/products';
+
+import { GetProducts, UpdateProductStatus } from '../../apicalls/products';
 import { SetLoader } from '../../redux/loadersSlice';
 
 function Products() {
@@ -26,7 +27,20 @@ function Products() {
   };
 
   const onStatusUpdate = async (id, status) => {
-    console.log(id, status)
+    try {
+      dispatch(SetLoader(true));
+      const response = await UpdateProductStatus(id, status);
+      dispatch(SetLoader(false));
+      if (response.success) {
+        message.success(response.message);
+        getData();
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      dispatch(SetLoader(false));
+      message.error(error.message);
+    }
   };
 
   const columns = [
