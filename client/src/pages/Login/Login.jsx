@@ -25,7 +25,7 @@ function Login() {
       if (response.success) {
         message.success(response.message);
         localStorage.setItem("token", response.data);
-        navigate("/");
+        window.location.href = "/";
       } else {
         throw new Error(response.message);
       }
@@ -39,7 +39,7 @@ function Login() {
     if (localStorage.getItem("token")) {
       navigate("/");
     }
-  }, []);
+  }, [navigate]);
 
   return (
     <div className="h-screen bg-primary flex justify-center items-center">

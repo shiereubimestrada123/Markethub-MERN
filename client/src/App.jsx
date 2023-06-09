@@ -5,6 +5,7 @@ import Home from './pages/Home/Home'
 import Profile from "./pages/Profile/Profile.jsx";
 import Register from './pages/Register/Register.jsx'
 import Login from './pages/Login/Login.jsx'
+import Admin from "./pages/Admin/Admin";
 
 import ProtectedPage from './components/ProtectedPage.jsx'
 import Spinner from  './components/Spinner.jsx'
@@ -18,6 +19,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<ProtectedPage><Home /></ProtectedPage>} />
+          <Route path="/admin" element={<ProtectedPage><Admin /></ProtectedPage>} />
           <Route path="/profile" element={<ProtectedPage><Profile /></ProtectedPage>} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />

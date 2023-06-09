@@ -7,6 +7,7 @@ import { GetCurrentUser } from '../apicalls/users';
 import { SetLoader } from '../redux/loadersSlice';
 import { SetUser } from '../redux/usersSlice'
 
+// eslint-disable-next-line react/prop-types
 function ProtectedPage({ children }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -47,16 +48,18 @@ function ProtectedPage({ children }) {
             className="text-2xl text-white cursor-pointer"
             onClick={() => navigate("/")}
           >
-            SHEY MP
+            Markethub
           </h1>
 
           <div className="bg-white py-2 px-5 rounded flex gap-1 items-center">
             <span
               className="underline cursor-pointer uppercase"
               onClick={() => {
-
+                if (user.role === "user") {
                   navigate("/profile");
-                
+                } else {
+                  navigate("/admin");
+                }
               }}
             >
               {user.name}
