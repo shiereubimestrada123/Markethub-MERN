@@ -30,8 +30,6 @@ const rules = [
 
 // eslint-disable-next-line react/prop-types
 const AddProductForm = forwardRef(({ onFinish, selectedProduct }, ref) => {
-  
-
   useEffect(() => {
     if (selectedProduct) {
       ref.current.setFieldsValue(selectedProduct);
