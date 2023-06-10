@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useDispatch } from "react-redux";
 import { Upload, Button, message } from 'antd'
 import { SetLoader } from '../../../redux/loadersSlice';
-import { UploadProductImage } from '../../../apicalls/products'
+import { UploadProductImage, EditProduct } from '../../../apicalls/products'
 
 // eslint-disable-next-line react/prop-types
 function Images({ selectedProduct, getData, setShowProductForm }) {
@@ -45,6 +45,28 @@ function Images({ selectedProduct, getData, setShowProductForm }) {
     }
   }
 
+  const handleDeleteImage = async (image) => {
+    try {
+      const updatedImagesArray = images.filter((img) => img !== image);
+      const updatedProduct = { ...selectedProduct, images: updatedImagesArray };
+      // eslint-disable-next-line react/prop-types
+      const response = await EditProduct(selectedProduct._id, updatedProduct);
+      if (response.success) {
+        message.success(response.message);
+        setImages(updatedImagesArray);
+        setFile(null);
+        getData();
+      } else {
+        throw new Error(response.message);
+      }
+
+      dispatch(SetLoader(true));
+    } catch (error) {
+      dispatch(SetLoader(false));
+      message.error(error.message);
+    }
+  };
+
   return (
     <>
       <div className="flex gap-5 mb-5">
@@ -52,7 +74,7 @@ function Images({ selectedProduct, getData, setShowProductForm }) {
           return (
             <div key={image} className="flex gap-2 border border-solid border-gray-500 rounded p-2 items-end">
               <img className="h-20 w-20 object-cover" src={image} alt="" />
-              <span>
+            <span onClick={() => handleDeleteImage(image)}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
