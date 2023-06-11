@@ -18,10 +18,12 @@ function ProtectedPage({ children }) {
     try {
       dispatch(SetLoader(true))
       const response = await GetCurrentUser();
+      console.log(response)
       dispatch(SetLoader(false))
       if (response.success) {
         dispatch(SetUser(response.data));
       } else {
+        localStorage.removeItem("token");
         navigate("/login");
         message.error(response.message);
       }
