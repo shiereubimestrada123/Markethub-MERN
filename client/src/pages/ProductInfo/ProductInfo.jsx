@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { message, Divider } from 'antd';
+import { message, Divider, Button } from 'antd';
 import moment from 'moment'
 
 import { GetProductById } from '../../apicalls/products';
 import { SetLoader } from '../../redux/loadersSlice';
+
+import BidModal from './BidModal'
 
 function ProductInfo() {
   const dispatch = useDispatch();
@@ -15,6 +17,7 @@ function ProductInfo() {
 
   const [product, setProduct] = useState(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [showAddNewBid, setShowAddNewBid] = useState(false);
 
   const getData = async () => {
     try {
@@ -134,7 +137,26 @@ console.log(product)
               </div>
             </div>
             <Divider />
+            <div className="flex flex-col">
+              <div className="flex justify-between mb-5">
+                <h1 className="text-2xl font-semibold text-orange-900">Bids</h1>
+                <Button
+                  onClick={() => setShowAddNewBid(!showAddNewBid)}
+                >
+                  New Bid
+                </Button>
+              </div>
+
+            </div>
           </div>
+
+          {showAddNewBid && (
+          <BidModal
+            product={product}
+            reloadData={getData}
+            showBidModal={showAddNewBid}
+          />
+        )}
         </div>
       </>
     )
