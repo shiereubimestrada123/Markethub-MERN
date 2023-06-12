@@ -1,19 +1,20 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { message, Divider, Button } from 'antd';
 import moment from 'moment'
 
-import { GetProductById } from '../../apicalls/products';
+import { GetProductById, GetAllBids } from '../../apicalls/products';
 import { SetLoader } from '../../redux/loadersSlice';
 
 import BidModal from './BidModal'
 
 function ProductInfo() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const { id } = useParams();
+
+  const { user } = useSelector((state) => state.users);
 
   const [product, setProduct] = useState(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -25,7 +26,11 @@ function ProductInfo() {
       const response = await GetProductById(id);
       dispatch(SetLoader(false));
       if (response.success) {
-        setProduct(response.data);
+        const bidsResponse = await GetAllBids({ product: id });
+        setProduct({
+          ...response.data,
+          bids: bidsResponse.data,
+        });
       }
     } catch (error) {
       dispatch(SetLoader(false));
@@ -52,7 +57,7 @@ console.log(product)
               {product.images.map((image, index) => {
                 return (
                   <img
-                    key={image[index]}
+                    key={image}
                     className={
                       'h-20 w-20 cursor-pointer rounded-md object-cover ' +
                       (selectedImageIndex === index
@@ -142,6 +147,7 @@ console.log(product)
                 <h1 className="text-2xl font-semibold text-orange-900">Bids</h1>
                 <Button
                   onClick={() => setShowAddNewBid(!showAddNewBid)}
+                  disabled={user._id === product.seller._id}
                 >
                   New Bid
                 </Button>
@@ -155,6 +161,7 @@ console.log(product)
             product={product}
             reloadData={getData}
             showBidModal={showAddNewBid}
+            setShowBidModal={setShowAddNewBid}
           />
         )}
         </div>

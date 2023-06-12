@@ -7,8 +7,10 @@ const port = process.env.PORT || 5000;
 
 const usersRoute = require('./routes/usersRoute');
 const productsRoute = require('./routes/productsRoute');
+const bidsRoute = require('./routes/bidsRoute');
 
 app.use('/api/users', usersRoute);
 app.use('/api/products', productsRoute);
+app.use('/api/bids', bidsRoute);
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
