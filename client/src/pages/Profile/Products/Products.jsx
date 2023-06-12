@@ -7,6 +7,7 @@ import { SetLoader } from '../../../redux/loadersSlice';
 import { GetProducts, DeleteProduct } from '../../../apicalls/products';
 
 import ProductsForm from './ProductsForm';
+import Bids from './Bids';
 
 function Products() {
   const dispatch = useDispatch();
@@ -16,6 +17,7 @@ function Products() {
   const [showProductForm, setShowProductForm] = useState(false);
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showBids, setShowBids] = useState(false);
 
   const getData = async () => {
     try {
@@ -126,6 +128,15 @@ function Products() {
                 />
               </svg>
             </span>
+            <span
+              className="underline cursor-pointer"
+              onClick={() => {
+                setSelectedProduct(record);
+                setShowBids(true);
+              }}
+            >
+              Show Bids
+            </span>
           </div>
         );
       },
@@ -150,6 +161,13 @@ function Products() {
           setShowProductForm={setShowProductForm}
           selectedProduct={selectedProduct}
           getData={getData}
+        />
+      )}
+      {showBids && (
+        <Bids
+          showBidsModal={showBids}
+          setShowBidsModal={setShowBids}
+          selectedProduct={selectedProduct}
         />
       )}
     </>
