@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { message, Divider, Button } from 'antd';
-import moment from 'moment'
+import moment from 'moment';
 
 import { GetProductById, GetAllBids } from '../../apicalls/products';
 import { SetLoader } from '../../redux/loadersSlice';
 
-import BidModal from './BidModal'
+import BidModal from './BidModal';
 
 function ProductInfo() {
   const dispatch = useDispatch();
@@ -37,7 +37,7 @@ function ProductInfo() {
       message.error(error.message);
     }
   };
-console.log(product)
+  console.log(product);
   useEffect(() => {
     getData();
   }, []);
@@ -77,7 +77,7 @@ console.log(product)
             <div>
               <h1 className="text-gray-600">Added On</h1>
               <span className="text-gray-600">
-                {moment(product.createdAt).format("MMM D , YYYY hh:mm A")}
+                {moment(product.createdAt).format('MMM D , YYYY hh:mm A')}
               </span>
             </div>
           </div>
@@ -94,36 +94,37 @@ console.log(product)
               <h1 className="text-2xl font-semibold text-orange-900">
                 Product Details
               </h1>
-              <div className="flex justify-between mt-2">
+              <div className="mt-2 flex justify-between">
                 <span>Price</span>
                 <span>$ {product.price}</span>
               </div>
-              <div className="flex justify-between mt-2">
+              <div className="mt-2 flex justify-between">
                 <span>Category</span>
                 <span className="uppercase">{product.category}</span>
               </div>
-              <div className="flex justify-between mt-2">
+              <div className="mt-2 flex justify-between">
                 <span>Bill Available</span>
-                <span> {product.billAvailable ? "Yes" : "No"}</span>
+                <span> {product.billAvailable ? 'Yes' : 'No'}</span>
               </div>
 
-              <div className="flex justify-between mt-2">
+              <div className="mt-2 flex justify-between">
                 <span>Box Available</span>
-                <span>{product.boxAvailable ? "Yes" : "No"}</span>
+                <span>{product.boxAvailable ? 'Yes' : 'No'}</span>
               </div>
-              <div className="flex justify-between mt-2">
+              <div className="mt-2 flex justify-between">
                 <span>Accessories Available</span>
-                <span>{product.accessoriesAvailable ? "Yes" : "No"}</span>
+                <span>{product.accessoriesAvailable ? 'Yes' : 'No'}</span>
               </div>
 
-              <div className="flex justify-between mt-2">
+              <div className="mt-2 flex justify-between">
                 <span>Warranty Available</span>
-                <span>{product.warrantyAvailable ? "Yes" : "No"}</span>
+                <span>{product.warrantyAvailable ? 'Yes' : 'No'}</span>
               </div>
-              <div className="flex justify-between mt-2">
+              <div className="mt-2 flex justify-between">
                 <span>Purchased Year</span>
                 <span>
-                    {moment().subtract(product.age , 'years').format("YYYY")} ({product.age} years ago)
+                  {moment().subtract(product.age, 'years').format('YYYY')} (
+                  {product.age} years ago)
                 </span>
               </div>
             </div>
@@ -132,18 +133,18 @@ console.log(product)
               <h1 className="text-2xl font-semibold text-orange-900">
                 Seller Details
               </h1>
-              <div className="flex justify-between mt-2">
+              <div className="mt-2 flex justify-between">
                 <span>Name</span>
                 <span> {product.seller.name}</span>
               </div>
-              <div className="flex justify-between mt-2">
+              <div className="mt-2 flex justify-between">
                 <span>Email</span>
                 <span className="uppercase">{product.seller.email}</span>
               </div>
             </div>
             <Divider />
             <div className="flex flex-col">
-              <div className="flex justify-between mb-5">
+              <div className="mb-5 flex justify-between">
                 <h1 className="text-2xl font-semibold text-orange-900">Bids</h1>
                 <Button
                   onClick={() => setShowAddNewBid(!showAddNewBid)}
@@ -153,17 +154,42 @@ console.log(product)
                 </Button>
               </div>
 
+              {product.showBidsOnProductPage &&
+                product.bids.map((bid) => {
+                  return (
+                    <div
+                      key={bid._id}
+                      className="mt-5 rounded border border-solid border-gray-300 p-3"
+                    >
+                      <div className="flex justify-between text-gray-700">
+                        <span>Name</span>
+                        <span> {bid.buyer.name}</span>
+                      </div>
+                      <div className="flex justify-between text-gray-600">
+                        <span>Bid Amount</span>
+                        <span> $ {bid.bidAmount}</span>
+                      </div>
+                      <div className="flex justify-between text-gray-600">
+                        <span>Bid Place On</span>
+                        <span>
+                          {' '}
+                          {moment(bid.createdAt).format('MMM D , YYYY hh:mm A')}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
             </div>
           </div>
 
           {showAddNewBid && (
-          <BidModal
-            product={product}
-            reloadData={getData}
-            showBidModal={showAddNewBid}
-            setShowBidModal={setShowAddNewBid}
-          />
-        )}
+            <BidModal
+              product={product}
+              reloadData={getData}
+              showBidModal={showAddNewBid}
+              setShowBidModal={setShowAddNewBid}
+            />
+          )}
         </div>
       </>
     )

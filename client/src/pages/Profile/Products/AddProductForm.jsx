@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useState } from 'react';
+import { forwardRef, useEffect } from 'react';
 import { Form, Input, Row, Col } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 
@@ -95,6 +95,23 @@ const AddProductForm = forwardRef(({ onFinish, selectedProduct }, ref) => {
             );
           })}
         </div>
+
+        <Form.Item
+          label="Show Bids on Product Page"
+          name="showBidsOnProductPage"
+          valuePropName="checked"
+        >
+          <Input
+            type="checkbox"
+            onChange={(e) => {
+              ref.current.setFieldsValue({
+                showBidsOnProductPage: e.target.checked,
+              });
+            }}
+            checked={ref.current?.getFieldValue('showBidsOnProductPage')}
+            style={{ width: 50, marginLeft: 20 }}
+          />
+        </Form.Item>
       </Form>
     </>
   );
